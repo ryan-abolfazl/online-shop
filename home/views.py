@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from .models import Product
+from .tasks import all_bucket_objects_task
+
 
 class HomeView(View):
     def get(self, request):
@@ -18,4 +20,5 @@ class BucketHome(View):
     template_name = 'home/bucket.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        objects = all_bucket_objects_task()
+        return render(request, self.template_name, {'objects':objects})
